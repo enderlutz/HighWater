@@ -396,6 +396,7 @@ export type Profile = {
   role: Role;
   client_id: string | null;
   full_name: string;
+  must_change_password: boolean;
 };
 
 // ───── IA module registry — new 2-zone model ─────

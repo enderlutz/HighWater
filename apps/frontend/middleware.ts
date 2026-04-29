@@ -55,6 +55,21 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
+  // Force pre-provisioned accounts through the password-change page.
+  if (user && pathname !== "/account/password") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("must_change_password")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (profile?.must_change_password) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/account/password";
+      redirectUrl.searchParams.set("force", "1");
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
   return response;
 }
 
